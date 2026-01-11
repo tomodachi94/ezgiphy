@@ -22,6 +22,10 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     keywords=['python', 'giphy', 'giphy api', 'gif'],
+    project_urls={
+        "Source Code": "https://github.com/tawhidii/ezgiphy",
+        "Issue Tracker": "https://github.com/tawhidii/ezgiphy/issues",
+    },
     classifiers=[
         "Development Status :: Completed",
         "Intended Audience :: Developers",
