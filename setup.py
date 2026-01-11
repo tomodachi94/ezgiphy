@@ -21,6 +21,9 @@ setup(
     long_description_content_type="text/markdown",
     long_description=long_description,
     packages=find_packages(),
+    package_data = {
+        'ezgiphy': ['py.typed'],
+    },
     keywords=['python', 'giphy', 'giphy api', 'gif'],
     classifiers=[
         "Development Status :: Completed",
@@ -29,5 +32,6 @@ setup(
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
+        "Typing :: Typed",
     ]
 )

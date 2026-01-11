@@ -2,6 +2,7 @@ import json
 from urllib import parse, request
 from .errors import APIKeyError, RequiredError
 from .constants import PUBLIC_API_URL, STICKER_API_URL
+from typing import Any, Dict, List, Optional
 
 
 class APIBase:
@@ -9,11 +10,11 @@ class APIBase:
     Base class for API initializer.
     """
 
-    def __init__(self, api_key=None):
+    def __init__(self, api_key: Optional[str] = None) -> None:
         self.api_key = api_key
         if api_key is None:
             raise APIKeyError
-        self.params = {
+        self.params: Dict[str, Any] = {
             'api_key': self.api_key
         }
 
@@ -24,7 +25,7 @@ class GiphyPublicAPI(APIBase):
     You can find api key from https://developers.giphy.com/dashboard/
     """
 
-    def __get_json(self, url, sort_key=False, indent=4):
+    def __get_json(self, url: str, sort_key: bool = False, indent: int = 4) -> str:
         """
 
         :param url: Giphy api endpoint with query parameters.
@@ -38,7 +39,7 @@ class GiphyPublicAPI(APIBase):
             data = json.loads(response.read())
         return json.dumps(obj=data, sort_keys=sort_key, indent=indent)
 
-    def search(self, **kwargs):
+    def search(self, **kwargs: Optional[str | int]) -> str:
         """
 
         :param q: Search query term or phrase (required).
@@ -53,7 +54,7 @@ class GiphyPublicAPI(APIBase):
         url = "".join((PUBLIC_API_URL, '/search', '?', params))
         return self.__get_json(url)
 
-    def translate(self, **kwargs):
+    def translate(self, **kwargs: Optional[str]) -> str:
         """
         :param s:  Search query term or phrase (required).
 
@@ -64,7 +65,7 @@ class GiphyPublicAPI(APIBase):
         url = "".join((PUBLIC_API_URL, '/translate', '?', params))
         return self.__get_json(url)
 
-    def trending(self, **kwargs):
+    def trending(self, **kwargs: Optional[int | str]) -> str:
         """
         :param limit: The maximum number of records to return.
         :param rating: Filters results by rating (g/pg/pg-13/r)
@@ -75,7 +76,7 @@ class GiphyPublicAPI(APIBase):
         url = "".join((PUBLIC_API_URL, '/trending', '?', params))
         return self.__get_json(url)
 
-    def random(self, **kwargs):
+    def random(self, **kwargs: Optional[str]) -> str:
         """
         :param tag: The maximum number of records to return.
         :param rating: Filters results by rating (g/pg/pg-13/r)
@@ -86,7 +87,7 @@ class GiphyPublicAPI(APIBase):
         url = "".join((PUBLIC_API_URL, '/random', '?', params))
         return self.__get_json(url)
 
-    def get_by_id(self, id=None):
+    def get_by_id(self, id: Optional[str] = None) -> str:
         """
         :param id: Filter result by specific gif id (required).
         """
@@ -96,7 +97,7 @@ class GiphyPublicAPI(APIBase):
         url = "".join((PUBLIC_API_URL, f'/{id}', '?', params))
         return self.__get_json(url)
 
-    def get_by_ids(self, ids=[]):
+    def get_by_ids(self, ids: List[str] = []) -> str:
         """
         :param ids: List of specific ids (required).
         """
@@ -113,7 +114,7 @@ class GiphyStickerAPI(APIBase):
       You can find api key from https://developers.giphy.com/dashboard/
       """
 
-    def __get_json(self, url, sort_key=False, indent=4):
+    def __get_json(self, url: str, sort_key: bool = False, indent: int = 4) -> str:
         """
 
         :param url: Giphy api endpoint with query parameters.
@@ -127,7 +128,7 @@ class GiphyStickerAPI(APIBase):
             data = json.loads(response.read())
         return json.dumps(obj=data, sort_keys=sort_key, indent=indent)
 
-    def search(self, **kwargs):
+    def search(self, **kwargs: Any[str | int]) -> str:
         """
 
         :param q: Search query term or phrase (required).
@@ -142,7 +143,7 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, '/search', '?', params))
         return self.__get_json(url)
 
-    def translate(self, **kwargs):
+    def translate(self, **kwargs: Optional[str]) -> str:
         """
         :param s:  Search query term or phrase (required).
 
@@ -153,7 +154,7 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, '/translate', '?', params))
         return self.__get_json(url)
 
-    def trending(self, **kwargs):
+    def trending(self, **kwargs: Optional[str | int]) -> str:
         """
         :param limit: The maximum number of records to return.
         :param rating: Filters results by rating (g/pg/pg-13/r)
@@ -164,7 +165,7 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, '/trending', '?', params))
         return self.__get_json(url)
 
-    def random(self, **kwargs):
+    def random(self, **kwargs: Optional[str]) -> str:
         """
         :param tag: The maximum number of records to return.
         :param rating: Filters results by rating (g/pg/pg-13/r)
@@ -175,7 +176,8 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, '/random', '?', params))
         return self.__get_json(url)
 
-    def get_by_id(self, id=None):
+    # FIXME: is setting id = None by default and then checking for the value necessary?
+    def get_by_id(self, id: Optional[str] = None) -> str:
         """
         :param id: Filter result by specific gif id (required).
         """
@@ -185,7 +187,7 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, f'/{id}', '?', params))
         return self.__get_json(url)
 
-    def get_by_ids(self, ids=[]):
+    def get_by_ids(self, ids: List[str] = []) -> str:
         """
         :param ids: List of specific ids (required).
         """
@@ -195,13 +197,13 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, '?', params, f"{'&ids='}", "%2C".join(ids)))
         return self.__get_json(url)
 
-    def stickers_listing(self):
+    def stickers_listing(self) -> str:
         """Get all the stickers pack"""
         params = parse.urlencode(self.params)
         url = "".join((STICKER_API_URL, '/packs', '?', params))
         return self.__get_json(url)
 
-    def individual_stickers_pack(self, id=None):
+    def individual_stickers_pack(self, id: Optional[str] = None) -> str:
         """
         :param id: get individual sticker pack by id
         """
@@ -211,7 +213,7 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, f'/packs/{id}', '?', params))
         return self.__get_json(url)
 
-    def stickers(self, id=None, **kwargs):
+    def stickers(self, id: Optional[str] = None, **kwargs: Optional[int]) -> str:
         """
         :param id: id of sticker pack.
         :param limit:The maximum number of records to return.
@@ -227,7 +229,7 @@ class GiphyStickerAPI(APIBase):
         url = "".join((STICKER_API_URL, f'/packs/{id}/stickers', '?', params))
         return self.__get_json(url)
 
-    def children_pack_listing(self, id=None):
+    def children_pack_listing(self, id: Optional[str] = None) -> str:
         """
         :param id: id of sticker pack.
         """
